@@ -223,10 +223,15 @@ function catchClickHeat(e)
 		/** Little waiting cycle: default is to wait until Ajax sent or until the end of the time if no Ajax is available */
 		now = new Date();
 		clickHeatLocalWait = now.getTime() + clickHeatWait;
-		while (clickHeatLocalWait > now.getTime())
-		{
-			now = new Date();
-		}
+		/* by adding the wait cycle to the onbeforeunload event, it will not run until the
+		   page navigates away. This will prevent delays on clicks that do not cause navigation
+		   such as form elements. */
+		addEvtListener(window, 'onbeforeunload', function() {
+			while (clickHeatLocalWait > now.getTime())
+			{
+				now = new Date();
+			}
+		});
 	}
 	catch (err)
 	{
